@@ -1,7 +1,5 @@
 package com.mehtank.androminion.ui;
 
-import java.util.ArrayList;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -16,12 +14,14 @@ import android.widget.FrameLayout;
 
 import com.mehtank.androminion.R;
 
+import java.util.ArrayList;
+
 
 public class CardAnimator {
 	@SuppressWarnings("unused")
 	private static final String TAG = "CardAnimator";
 	
-	public static enum ShowCardType {OBTAINED, TRASHED, REVEALED};
+	public enum ShowCardType {OBTAINED, TRASHED, REVEALED}
 	
 	private ViewGroup rootView;
 	private int left;

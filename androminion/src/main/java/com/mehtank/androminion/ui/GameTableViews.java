@@ -1,16 +1,16 @@
 package com.mehtank.androminion.ui;
 
-import java.util.ArrayList;
-
-import com.mehtank.androminion.R;
-import com.mehtank.androminion.util.CardGroup;
-import com.vdom.comms.MyCard;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mehtank.androminion.R;
+import com.mehtank.androminion.util.CardGroup;
+import com.vdom.comms.MyCard;
+
+import java.util.ArrayList;
 
 /**
  * Keeps track of all the cards in play
@@ -84,7 +84,7 @@ public class GameTableViews {
 		}
 	}
 	
-	public static CardView getCardView(Context context, GameTable gt, int card) {
+	public static CardView getCardView(Context context, int card) {
 		return new CardView(context, null, cardsInPlay.get(card));
 	}
 }

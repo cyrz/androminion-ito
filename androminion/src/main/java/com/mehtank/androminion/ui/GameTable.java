@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.mehtank.androminion.R;
@@ -36,8 +34,6 @@ import com.vdom.comms.MyCard;
 import com.vdom.comms.SelectCardOptions;
 import com.vdom.comms.SelectCardOptions.PickType;
 import com.vdom.core.Cards;
-import com.vdom.core.Player.SpiceMerchantOption;
-import com.vdom.core.Player.TorturerOption;
 
 public class GameTable extends LinearLayout implements OnItemClickListener, OnItemLongClickListener {
     @SuppressWarnings("unused")
@@ -1088,7 +1084,7 @@ public class GameTable extends LinearLayout implements OnItemClickListener, OnIt
      */
     public String showCard (int card, String playerInt, CardAnimator.ShowCardType type) {
         int player = 0;
-        CardView c = GameTableViews.getCardView(top, this, card);
+        CardView c = GameTableViews.getCardView(top, card);
         try {
             player = Integer.parseInt(playerInt);
         } catch (NumberFormatException e) {
