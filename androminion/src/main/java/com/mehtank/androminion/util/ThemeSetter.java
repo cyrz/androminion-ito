@@ -1,8 +1,5 @@
 package com.mehtank.androminion.util;
 
-import java.util.HashMap;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -10,6 +7,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.mehtank.androminion.R;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Helper class for maintaining the same theme throughout the application.
@@ -48,7 +48,7 @@ public class ThemeSetter {
 	 * 
 	 * @param act
 	 *            The theme of this Activity will be changed.
-	 * @param noActionbar
+	 * @param showActionbar
 	 *            true: Set theme without ActionBar. false: Set theme with
 	 *            ActionBar.
 	 */

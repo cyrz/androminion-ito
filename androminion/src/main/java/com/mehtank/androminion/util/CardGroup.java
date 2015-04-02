@@ -1,8 +1,5 @@
 package com.mehtank.androminion.util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +11,9 @@ import com.mehtank.androminion.ui.CardView.CardState;
 import com.mehtank.androminion.ui.Strings;
 import com.vdom.api.Card;
 import com.vdom.comms.MyCard;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Collection of cards (e.g. hand, row of piles) that is displayed in a row / table
@@ -52,7 +52,7 @@ public class CardGroup extends BaseAdapter {
         CardState ci = new CardState(c, false, "", -1, !state);
         ci.onTable = onTable;
         if (onTable || sorted) { // sort cards that are on the table
-            int i = 0;
+            int i;
             for (i=0; i < cards.size(); i++) {
                 if(cmp.compare(c, cards.get(i).c) < 0)
                     break;

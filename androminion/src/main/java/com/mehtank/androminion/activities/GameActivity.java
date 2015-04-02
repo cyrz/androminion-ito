@@ -117,8 +117,6 @@ public class GameActivity extends SherlockActivity implements EventHandler {
     //    private String serverHost;
     //    private int serverPort;
 
-    private final boolean DEBUGGING = false;
-
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,7 +175,7 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         host = DEFAULT_HOST;
         port = DEFAULT_PORT;
 
-        if (!prefs.getString("LastVersion", "None").equals(getString(R.string.version))) {
+        if (!prefs.getString("LastVersion", "None").equalsIgnoreCase(getString(R.string.version))) {
             SharedPreferences.Editor edit = prefs.edit();
             edit.putString("LastVersion", getString(R.string.version));
             edit.commit();
@@ -200,7 +198,8 @@ public class GameActivity extends SherlockActivity implements EventHandler {
             }
         }
         if (gameRunning) {
-            Game.processUserPrefArgs(getUserPrefs().toArray(new String[0]));
+            final String[] args = getArgs();
+            Game.processUserPrefArgs(args);
         }
     }
 
@@ -217,8 +216,14 @@ public class GameActivity extends SherlockActivity implements EventHandler {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         if (gameRunning) {
-            Game.processUserPrefArgs(getUserPrefs().toArray(new String[0]));
+            final String[] args = getArgs();
+            Game.processUserPrefArgs(args);
         }
+    }
+
+    private String[] getArgs() {
+        ArrayList<String> userPrefs = getUserPrefs();
+        return userPrefs.toArray(new String[userPrefs.size()]);
     }
 
     boolean getPref(String prefName) {
@@ -431,6 +436,8 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         return true;
     }
 
+    final GameHandler mHandler = new GameHandler(this);
+
     public static class GameHandler extends Handler {
 
         private final WeakReference<GameActivity> gameActivity;
@@ -447,7 +454,7 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         public void handleMessage(Message msg) {
             final GameActivity game = getGame();
             if (null == game){
-                Log.e(TAG, "Game tried updating after destruction");
+                Log.e(TAG, "Game tried updating after destruction.");
                 return;
             }
 
@@ -626,8 +633,6 @@ public class GameActivity extends SherlockActivity implements EventHandler {
                 game.put(new Event(EType.Success));
         }
     }
-
-    final GameHandler mHandler = new GameHandler(this);
 
     /**
      * Could eventually skip setting the bar titles over and over again for

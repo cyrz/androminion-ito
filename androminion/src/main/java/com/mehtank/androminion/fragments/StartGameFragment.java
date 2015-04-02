@@ -1,7 +1,5 @@
 package com.mehtank.androminion.fragments;
 
-import java.util.ArrayList;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +16,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.mehtank.androminion.R;
+import com.mehtank.androminion.ui.Strings;
 import com.vdom.api.GameType;
+
+import java.util.ArrayList;
 
 public class StartGameFragment extends SherlockFragment implements OnClickListener, OnItemSelectedListener {
     @SuppressWarnings("unused")
@@ -59,7 +60,7 @@ public class StartGameFragment extends SherlockFragment implements OnClickListen
 
     enum TypeOptions {
         RANDOM, PRESET, LAST, SPECIFIED
-    };
+    }
 
     TypeOptions mGameType;
 
@@ -128,12 +129,12 @@ public class StartGameFragment extends SherlockFragment implements OnClickListen
 
         GameType[] types = GameType.values();
         String type;
-        for (int i = 0; i < types.length; i++) {
-            if (types[i] == GameType.Specified) {
+        for (GameType type1 : types) {
+            if (type1 == GameType.Specified) {
                 continue;
             }
-            type = com.mehtank.androminion.ui.Strings.getGameTypeName(types[i]);
-            if (types[i].name().startsWith("Random")) {
+            type = Strings.getGameTypeName(type1);
+            if (type1.name().startsWith("Random")) {
                 randoms.add(type);
             } else {
                 presets.add(type);
@@ -371,6 +372,6 @@ public class StartGameFragment extends SherlockFragment implements OnClickListen
 
     // Container Activity must implement this interface
     public interface OnStartGameListener {
-        public void onStartGameClick(ArrayList<String> values);
+        void onStartGameClick(ArrayList<String> values);
     }
 }

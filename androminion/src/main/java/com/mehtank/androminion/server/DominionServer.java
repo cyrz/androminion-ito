@@ -1,17 +1,17 @@
 package com.mehtank.androminion.server;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
-import com.mehtank.androminion.ui.Strings;
-import com.vdom.core.VDomServer;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.mehtank.androminion.ui.Strings;
+import com.vdom.core.VDomServer;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 public class DominionServer extends Service {
     @SuppressWarnings("unused")
@@ -77,7 +77,7 @@ public class DominionServer extends Service {
                      enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress().toString();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }

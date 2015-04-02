@@ -9,9 +9,9 @@ public class HapticFeedback {
 	@SuppressWarnings("unused")
 	private static final String TAG = "HapticFeedback";
 	
-	public static enum AlertType {
+	public enum AlertType {
 		CHAT, TURNBEGIN, SELECT, CLICK, LONGCLICK, FINAL,
-	};
+	}
 
 	public static void vibrate(Context context, AlertType t) {
 		SharedPreferences prefs;

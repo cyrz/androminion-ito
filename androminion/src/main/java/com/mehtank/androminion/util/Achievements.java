@@ -1,11 +1,5 @@
 package com.mehtank.androminion.util;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +13,12 @@ import android.widget.CheckedTextView;
 import android.widget.Toast;
 
 import com.mehtank.androminion.R;
+
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Achievements {
 	@SuppressWarnings("unused")
@@ -238,18 +238,16 @@ public class Achievements {
         ArrayList<String> players = new ArrayList<String>();
 
         Map<String, ?> all = prefs.getAll();
-        Iterator<String> keys = all.keySet().iterator();
-        while(keys.hasNext()) {
-            String key = keys.next();
-            if(key.startsWith("wins_")) {
+        for (String key : all.keySet()) {
+            if (key.startsWith("wins_")) {
                 String name = key.substring("wins_".length());
-                if(!players.contains(name)) {
+                if (!players.contains(name)) {
                     players.add(name);
                 }
             }
-            if(key.startsWith("losses_")) {
+            if (key.startsWith("losses_")) {
                 String name = key.substring("losses_".length());
-                if(!players.contains(name)) {
+                if (!players.contains(name)) {
                     players.add(name);
                 }
             }
@@ -278,7 +276,7 @@ public class Achievements {
     }
 
     public int getWinStreak(String player) {
-    	if (prefs.getString(WIN_STREAK_PLAYER_KEY, "").equals(player))
+    	if (prefs.getString(WIN_STREAK_PLAYER_KEY, "").equalsIgnoreCase(player))
     		return prefs.getInt(WIN_STREAK_COUNT_KEY, 0);
     	return 0;
     }
@@ -298,10 +296,7 @@ public class Achievements {
     }
 
     public static boolean isHumanPlayer(String s) {
-        if(!s.equals("Mary") && !s.equals("Sarah") && !s.equals("Earl") && !s.equals("Drew") && !s.equals("Chuck") && !s.equals("Patrick")) {
-            return true;
-        }
-        return false;
+        return !"Mary".equals(s) && !"Sarah".equals(s) && !"Earl".equals(s) && !"Drew".equals(s) && !"Chuck".equals(s) && !"Patrick".equals(s);
     }
 
     public AchievementsAdapter getNewAchievementsAdapter() {

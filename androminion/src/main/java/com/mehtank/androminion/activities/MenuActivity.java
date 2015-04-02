@@ -1,9 +1,6 @@
 package com.mehtank.androminion.activities;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +22,8 @@ import com.mehtank.androminion.R;
 import com.mehtank.androminion.fragments.StartGameFragment;
 import com.mehtank.androminion.fragments.StartGameFragment.OnStartGameListener;
 import com.mehtank.androminion.util.ThemeSetter;
+
+import java.util.ArrayList;
 
 /**
  * Start screen of the application, showing a menu.
@@ -75,7 +74,7 @@ OnStartGameListener {
             }
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getString("LastVersion", "None").equals(getString(R.string.version))) {
+        if (!prefs.getString("LastVersion", "None").equalsIgnoreCase(getString(R.string.version))) {
             SharedPreferences.Editor edit = prefs.edit();
             edit.putString("LastVersion", getString(R.string.version));
             edit.commit();
