@@ -8,6 +8,8 @@ android {
         applicationId "com.mehtank.androminion"
         minSdkVersion 9
         targetSdkVersion 22
+        versionCode 501
+        versionName "5.01"
     }
 
     buildTypes {
