@@ -1,10 +1,5 @@
 package com.mehtank.androminion.ui;
 
-import java.io.File;
-import java.util.List;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -36,6 +31,11 @@ import com.mehtank.androminion.util.CheckableEx;
 import com.mehtank.androminion.util.HapticFeedback;
 import com.mehtank.androminion.util.HapticFeedback.AlertType;
 import com.vdom.comms.MyCard;
+
+import java.io.File;
+import java.util.List;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
  * Corresponds to a single card that is visible on the 'table'
@@ -193,6 +193,7 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 		int textColor = cardStyle.getColor(2, R.color.cardDefaultTextColor);
         int nameBgColor = cardStyle.getColor(1, R.color.cardDefaultTextBackgroundColor);
 		int countColor = cardStyle.getColor(3, R.color.cardDefaultTextColor);
+		cardStyle.recycle();
 
 		cardBox.setBackgroundColor(bgColor);
 		name.setTextColor(textColor);
