@@ -1,14 +1,5 @@
 package com.mehtank.androminion.activities;
 
-import java.io.IOException;
-import java.io.StreamCorruptedException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,9 +23,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.mehtank.androminion.BuildConfig;
 import com.mehtank.androminion.R;
 import com.mehtank.androminion.ui.GameTable;
-import com.mehtank.androminion.ui.HostDialog;
 import com.mehtank.androminion.ui.JoinGameDialog;
 import com.mehtank.androminion.ui.Strings;
 import com.mehtank.androminion.util.HapticFeedback;
@@ -49,7 +40,16 @@ import com.vdom.comms.GameStatus;
 import com.vdom.comms.MyCard;
 import com.vdom.comms.NewGame;
 import com.vdom.core.Game;
-import com.vdom.core.Util;
+
+import java.io.IOException;
+import java.io.StreamCorruptedException;
+import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * How all this works:
@@ -415,7 +415,7 @@ public class GameActivity extends SherlockActivity implements EventHandler {
 
     @Override
     public void debug(String s) {
-        if (DEBUGGING)
+        if (BuildConfig.DEBUG)
             Log.d("Androminion", s);
     }
 
@@ -431,160 +431,176 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         return true;
     }
 
-    final Handler mHandler = new Handler() {
+    public static class GameHandler extends Handler {
+
+        private final WeakReference<GameActivity> gameActivity;
+
+        public GameHandler(GameActivity gameActivity) {
+            this.gameActivity = new WeakReference<GameActivity>(gameActivity);
+        }
+
+        public GameActivity getGame() {
+            return gameActivity.get();
+        }
+
         @Override
         public void handleMessage(Message msg) {
+            final GameActivity game = getGame();
+            if (null == game){
+                Log.e(TAG, "Game tried updating after destruction");
+                return;
+            }
 
             if (msg.what == MESSAGE_LOSTCONNECTION) {
-                lostConnection();
+                game.lostConnection();
                 return;
             }
             if (msg.what != MESSAGE_EVENT)
                 return;
             Event e = (Event) msg.obj;
-            debug("Handling message: " + e.toString());
+            game.debug("Handling message: " + e.toString());
             boolean ack = false;
 
             switch (e.t) {
                 // FROM RADIO --
                 // startup
                 case GAMESTATS:
-                    splash();
-                    handshake(e);
-                    disconnect();
+                    game.splash();
+                    game.handshake(e);
+                    game.disconnect();
                     break;
 
                 case NEWGAME:
                     NewGame ng = e.o.ng;
-                    splash();
+                    game.splash();
 
-                    saveLastCards(ng.cards);
-                    gt.newGame(ng.cards, ng.players);
-                    gameRunning = true;
+                    game.saveLastCards(ng.cards);
+                    game.gt.newGame(ng.cards, ng.players);
+                    game.gameRunning = true;
 
-                    for (int i=0; i < ng.cards.length - 1; i++) {                    	
+                    for (int i=0; i < ng.cards.length - 1; i++) {
                         for (int j=i+1; j < ng.cards.length; j++) {
-                        	if (ng.cards[i].name.compareTo(ng.cards[j].name) > 0) {
-                        		MyCard mc = ng.cards[j];
-                        		ng.cards[j] = ng.cards[i];
-                        		ng.cards[i] = mc;                        		
-                        	}
+                            if (ng.cards[i].name.compareTo(ng.cards[j].name) > 0) {
+                                MyCard mc = ng.cards[j];
+                                ng.cards[j] = ng.cards[i];
+                                ng.cards[i] = mc;
+                            }
                         }
                     }
                     /*TODO frr*/
                     Event event = new Event(Event.EType.CARDRANKING).setObject(new EventObject(ng));
-                    put(event);
-                    
+                    game.put(event);
+
                     //PreferenceManager.getDefaultSharedPreferences(top).registerOnSharedPreferenceChangeListener(gt);
                     break;
 
                 // during game
                 case CHAT: // received chat message
-                    HapticFeedback.vibrate(top, AlertType.CHAT);
-                    Toast.makeText(top, e.s, Toast.LENGTH_LONG).show();
+                    HapticFeedback.vibrate(game.top, AlertType.CHAT);
+                    Toast.makeText(game.top, e.s, Toast.LENGTH_LONG).show();
                     break;
 
                 case INFORM: // received inform message
-                	String s;
-                	if (e.s != null) {
-                		s = e.s;
-	                	if (e.s.equals("TRASHED")) {
-	                		s = getString(R.string.trashed);
-	                	}
-                	}
-                	else {
-                		s = "%1$s";
-                	}
+                    String s;
+                    if (e.s != null) {
+                        s = e.s;
+                        if (e.s.equals("TRASHED")) {
+                            s = game.getString(R.string.trashed);
+                        }
+                    }
+                    else {
+                        s = "%1$s";
+                    }
                     String inform = Strings.format(s, Strings.getCardName(e.c));
-                    Toast.makeText(top, inform, Toast.LENGTH_LONG).show();
+                    Toast.makeText(game.top, inform, Toast.LENGTH_LONG).show();
                     break;
 
                 case CARDOBTAINED: // a player got a card
-                    setStatus(e.setString(gt.cardObtained(e.i, e.s)));
+                    game.setStatus(e.setString(game.gt.cardObtained(e.i, e.s)));
                     // ack = true;
                     break;
 
                 case CARDTRASHED: // a player trashed a card
-                    setStatus(e.setString(gt.cardTrashed(e.i, e.s)));
+                    game.setStatus(e.setString(game.gt.cardTrashed(e.i, e.s)));
                     // ack = true;
                     break;
 
                 case CARDREVEALED: // a player revealed a card
-                    setStatus(e.setString(gt.cardRevealed(e.i, e.s)));
+                    game.setStatus(e.setString(game.gt.cardRevealed(e.i, e.s)));
                     // ack = true;
                     break;
 
                 case STATUS:  //RemotePlayer sent us the current status of the game, which we update
-                    setStatus(e);
+                    game.setStatus(e);
                     // ack = true;
                     break;
 
                 case GETCARD:  //RemotePlayer wants us to choose a card and send an EType.CARD event back
-                    gt.selectCard(e.o.sco, e.s, e.i, e.b);
+                    game.gt.selectCard(e.o.sco, e.s, e.i, e.b);
                     break;
 
                 case GETOPTION:  // RemotePlayer wants us to choose an option (like the old GETSTRING, but we have to figure out the strings first)
-                    gt.selectOption(e);
+                    game.gt.selectOption(e);
                     break;
 
                 case GETBOOLEAN:
-                    gt.selectBoolean(e.c, e.o.os);
+                    game.gt.selectBoolean(e.c, e.o.os);
                     break;
 
                 case ORDERCARDS:
-                    gt.orderCards(e.o.is);
+                    game.gt.orderCards(e.o.is);
                     break;
 
-                    // FROM DIALOGS --
+                // FROM DIALOGS --
                 case HELLO: // received from JoinGameDialog; connect to standard port (which would be VDomServer)
-                    startGame(port);
+                    game.startGame(game.port);
                     break;
 
                 case JOINGAME: // received from JoinGameDialog; connect to received port (would be a RemotePlayer instance)
-                    name = e.s;
-                    startGame(e.i);
+                    game.name = e.s;
+                    game.startGame(e.i);
                     break;
 
                 case SETHOST: // sent from HostDialog
                     if (e.s != null)
-                        host = e.s;
+                        game.host = e.s;
                     if (e.i > 0)
-                        port = e.i;
-                    startGame(port);
+                        game.port = e.i;
+                    game.startGame(game.port);
                     break;
 
                 case STARTGAME: // Sent from GameActivity to itself to connect to VDomServer
-                    if (start(port))
-                        put(e);
+                    if (game.start(game.port))
+                        game.put(e);
                     break;
 
-                    // Whenever the user made a choice and sent this to GameTable (or various prompting dialogs), we receive it here.
-                    // and send it on to RemotePlayer
+                // Whenever the user made a choice and sent this to GameTable (or various prompting dialogs), we receive it here.
+                // and send it on to RemotePlayer
                 case SAY:
                 case CARD:
                 case CARDORDER:
                 case OPTION:
                 case BOOLEAN:
-                    put(e);
+                    game.put(e);
                     break;
 
                 case ACHIEVEMENT: // got an achievement
-                    gt.achieved(e.s);
+                    game.gt.achieved(e.s);
                     ack = true;
                     break;
 
                 case DEBUG: // write something to debug log
-                    debug(e.s);
+                    game.debug(e.s);
                     break;
 
                 case DISCONNECT: // lost connection; sent by Comms
-                    if (!gotQuit)
-                        lostConnection();
+                    if (!game.gotQuit)
+                        game.lostConnection();
                     break;
 
                 case QUIT: // Server quit us
-                    gotQuit = true;
-                    disconnect();
+                    game.gotQuit = true;
+                    game.disconnect();
                 case GETNAME:
                     break;
                 case GETSERVER:
@@ -607,67 +623,69 @@ public class GameActivity extends SherlockActivity implements EventHandler {
                     break;
             }
             if (ack)
-                put(new Event(EType.Success));
+                game.put(new Event(EType.Success));
         }
+    }
 
-        /**
-         * Could eventually skip setting the bar titles over and over again for
-         * better performance, but works
-         *
-         * @param e
-         */
-        private void setStatus(Event e) {
-            GameStatus gs = e.o.gs;
-            gt.setStatus(gs, e.o.os, e);
-            String name = gt.getPlayerAdapter().getItem(gs.whoseTurn).name;
-            String subtitle = buildHintString(gs, e.s, e.b);
-            ActionBar bar = getSupportActionBar();
-            if (bar == null) {
-                miniactionbar.setText(name + ": " + subtitle);
-            } else {
-                bar.setSubtitle(subtitle);
-                bar.setTitle(getResources().getString(R.string.currentplayer) + ": " + name);
-            }
+    final GameHandler mHandler = new GameHandler(this);
+
+    /**
+     * Could eventually skip setting the bar titles over and over again for
+     * better performance, but works
+     *
+     * @param e
+     */
+    private void setStatus(Event e) {
+        GameStatus gs = e.o.gs;
+        gt.setStatus(gs, e.o.os, e);
+        String name = gt.getPlayerAdapter().getItem(gs.whoseTurn).name;
+        String subtitle = buildHintString(gs, e.s, e.b);
+        ActionBar bar = getSupportActionBar();
+        if (bar == null) {
+            miniactionbar.setText(name + ": " + subtitle);
+        } else {
+            bar.setSubtitle(subtitle);
+            bar.setTitle(getResources().getString(R.string.currentplayer) + ": " + name);
         }
+    }
 
-        /**
-         * This is just a quick try, duplicate to code in TurnView. Should be
-         * fixed sooner or later...
-         *
-         * @param gs
-         * @param s
-         * @param newTurn
-         * @return
-         */
-        private String buildHintString(GameStatus gs, String s, boolean newTurn) {
+    /**
+     * This is just a quick try, duplicate to code in TurnView. Should be
+     * fixed sooner or later...
+     *
+     * @param gs
+     * @param s
+     * @param newTurn
+     * @return
+     */
+    private String buildHintString(GameStatus gs, String s, boolean newTurn) {
 
-            String actions;
-            if (gs.turnStatus[0] == 1)
-                actions = top.getString(R.string.action_single, "" + gs.turnStatus[0]);
-            else
-                actions = top.getString(R.string.action_multiple, "" + gs.turnStatus[0]);
-            String buys;
-            if (gs.turnStatus[1] == 1)
-                buys = top.getString(R.string.buy_single, "" + gs.turnStatus[1]);
-            else
-                buys = top.getString(R.string.buy_multiple, "" + gs.turnStatus[1]);
+        String actions;
+        if (gs.turnStatus[0] == 1)
+            actions = top.getString(R.string.action_single, "" + gs.turnStatus[0]);
+        else
+            actions = top.getString(R.string.action_multiple, "" + gs.turnStatus[0]);
+        String buys;
+        if (gs.turnStatus[1] == 1)
+            buys = top.getString(R.string.buy_single, "" + gs.turnStatus[1]);
+        else
+            buys = top.getString(R.string.buy_multiple, "" + gs.turnStatus[1]);
 
-            //                    String coinStr = "" + is[2] + ((potions > 0)?"p":"");
-            String coinStr = "" + gs.turnStatus[2];
-            if (gs.potions == 1) {
-                coinStr += "p";
-            } else if (gs.potions > 1) {
-                coinStr += "p" + gs.potions;
-            }
-            //                    for(int i=0; i < potions; i++) {
-            //                        coinStr += "p";
-            //                    }
-            String coinsStr = top.getString(R.string.coins, coinStr);
-            String baseStr = top.getString(R.string.actions_buys_coins, actions, buys, coinsStr);
-
-            return baseStr;
+        //                    String coinStr = "" + is[2] + ((potions > 0)?"p":"");
+        String coinStr = "" + gs.turnStatus[2];
+        if (gs.potions == 1) {
+            coinStr += "p";
+        } else if (gs.potions > 1) {
+            coinStr += "p" + gs.potions;
         }
-    };
+        //                    for(int i=0; i < potions; i++) {
+        //                        coinStr += "p";
+        //                    }
+        String coinsStr = top.getString(R.string.coins, coinStr);
+        String baseStr = top.getString(R.string.actions_buys_coins, actions, buys, coinsStr);
+
+        return baseStr;
+    }
 
     private void saveLastCards(MyCard[] cards) {
         SharedPreferences prefs;
