@@ -198,7 +198,8 @@ public class GameActivity extends SherlockActivity implements EventHandler {
             }
         }
         if (gameRunning) {
-            final String[] args = getArgs();
+            ArrayList<String> userPrefs = getUserPrefs();
+            final String[] args = userPrefs.toArray(new String[userPrefs.size()]);
             Game.processUserPrefArgs(args);
         }
     }
@@ -216,14 +217,10 @@ public class GameActivity extends SherlockActivity implements EventHandler {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         if (gameRunning) {
-            final String[] args = getArgs();
+            ArrayList<String> userPrefs = getUserPrefs();
+            final String[] args = userPrefs.toArray(new String[userPrefs.size()]);
             Game.processUserPrefArgs(args);
         }
-    }
-
-    private String[] getArgs() {
-        ArrayList<String> userPrefs = getUserPrefs();
-        return userPrefs.toArray(new String[userPrefs.size()]);
     }
 
     boolean getPref(String prefName) {
