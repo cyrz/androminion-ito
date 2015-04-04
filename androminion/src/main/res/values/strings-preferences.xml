@@ -38,7 +38,7 @@
     <string name="equal_start_hands_pref_summary">All players have the same starting hand (will take effect next game)</string>
     <string name="plat_colony_pref_title">Include Plat &amp; Colony</string>
     <string name="plat_colony_pref_summary">Always include platinum and colony cards, regardless of game type (will take effect next game)</string>
-    <string name="black_market_count_pref_title">Cards im Black Market deck</string>
+    <string name="black_market_count_pref_title">Cards in Black Market deck</string>
     <string name="black_market_count_pref_summary">Number of cards in Black Market deck if Black Market is in play (at least 15 recommended)</string>
     <string name="ui_pref_title">User Interface</string>
     <string name="personalization_pref_title">Personalization</string>
