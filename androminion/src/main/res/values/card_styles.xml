@@ -14,16 +14,16 @@
         <item name="cardCountColor">@color/cardDefaultTextColor</item>
     </style>
 
-    <style name="CardView.InverseText">
+    <style name="CardView.InverseText" parent="@style/CardView">
         <item name="cardTextColor">@color/cardInverseTextColor</item>
         <item name="cardCountColor">@color/cardInverseTextColor</item>
     </style>
 
-    <style name="CardView.Reaction">
+    <style name="CardView.Reaction" parent="@style/CardView">
         <item name="cardBackgroundColor">@color/cardReaction</item>
     </style>
 
-    <style name="CardView.Reaction.Victory">
+    <style name="CardView.Reaction.Victory" parent="@style/CardView">
         <item name="cardNameBackgroundColor">@color/cardVictory</item>
         <item name="cardTextColor">@color/cardInverseTextColor</item>
     </style>
@@ -32,7 +32,7 @@
         <item name="cardBackgroundColor">@color/cardDuration</item>
     </style>
 
-    <style name="CardView.Attack">
+    <style name="CardView.Attack" parent="@style/CardView">
         <item name="cardTextColor">@color/cardAttack</item>
         <item name="cardCountColor">@color/cardAttack</item>
     </style>
@@ -51,31 +51,31 @@
         <item name="cardBackgroundColor">@color/cardTreasure</item>
     </style>
 
-    <style name="CardView.Treasure.Copper">
+    <style name="CardView.Treasure.Copper" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardCopper</item>
     </style>
 
-    <style name="CardView.Treasure.Silver">
+    <style name="CardView.Treasure.Silver" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardSilver</item>
     </style>
 
-    <style name="CardView.Treasure.Gold">
+    <style name="CardView.Treasure.Gold" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardGold</item>
     </style>
 
-    <style name="CardView.Treasure.Platinum">
+    <style name="CardView.Treasure.Platinum" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardPlatinum</item>
     </style>
 
-    <style name="CardView.Treasure.Potion">
+    <style name="CardView.Treasure.Potion" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardPotion</item>
     </style>
 
-    <style name="CardView.Treasure.Reaction">
+    <style name="CardView.Treasure.Reaction" parent="@style/CardView.InverseText">
         <item name="cardNameBackgroundColor">@color/cardReaction</item>
     </style>
 
-    <style name="CardView.Treasure.Victory">
+    <style name="CardView.Treasure.Victory" parent="@style/CardView.InverseText">
         <item name="cardBackgroundColor">@color/cardSilver</item>
         <item name="cardNameBackgroundColor">@color/cardVictory</item>
     </style>
@@ -84,7 +84,7 @@
         <item name="cardBackgroundColor">@color/cardVictory</item>
     </style>
 
-    <style name="CardView.Victory.Action">
+    <style name="CardView.Victory.Action" parent="@style/CardView.InverseText">
         <item name="cardNameBackgroundColor">@color/cardVictory</item>
         <item name="cardCountColor">@color/cardDefaultTextColor</item>
         <item name="cardBackgroundColor">@color/cardDefaultTextBackgroundColor</item>

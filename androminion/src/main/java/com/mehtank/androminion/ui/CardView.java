@@ -56,7 +56,11 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 
 	CardGroup parent;
 	private CardState state;
-/**
+	private int defaultBackgroundColor;
+	private int defaultTextColor;
+	private int defaultTextBackgroundColor;
+
+	/**
  * Information about a card type opened, onTable, indicator, order
  *
  */
@@ -127,6 +131,10 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 		checked = (TextView) findViewById(R.id.checked);
 		cardDesc = (TextView) findViewById(R.id.cardDesc);
 
+		defaultBackgroundColor = context.getResources().getColor(R.color.cardDefaultBackgroundColor);
+		defaultTextColor = context.getResources().getColor(R.color.cardDefaultTextColor);
+		defaultTextBackgroundColor = context.getResources().getColor(R.color.cardDefaultTextBackgroundColor);
+
 		state = new CardState(null);
 
 		if (c != null) {
@@ -167,33 +175,31 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 		} else {
 			if (c.isBane) {
 				setBackgroundResource(R.drawable.baneborder);
-		} 
+			}
 		else if (c.isShelter)
 		{
 			setBackgroundResource(R.drawable.shelterborder);
-		}
-		else {
+		} else {
 				setBackgroundResource(R.drawable.cardborder);
 			}
 		}
 
 		name.setText(c.name, TextView.BufferType.SPANNABLE);
-		if(cost != null) {
+		if (cost != null) {
 			setCost(GameTable.getCardCost(c), c.isOverpay);
 		}
 
 		int cardStyleId = getStyleForCard(c);
 		TypedArray cardStyle = getContext().obtainStyledAttributes(cardStyleId,
-				new int[] {
-					R.attr.cardBackgroundColor,
-					R.attr.cardNameBackgroundColor,
-					R.attr.cardTextColor,
-					R.attr.cardCountColor });
-		int bgColor = cardStyle.getColor(0, R.color.cardDefaultBackgroundColor);
-		int textColor = cardStyle.getColor(2, R.color.cardDefaultTextColor);
-        int nameBgColor = cardStyle.getColor(1, R.color.cardDefaultTextBackgroundColor);
-		int countColor = cardStyle.getColor(3, R.color.cardDefaultTextColor);
-		cardStyle.recycle();
+				new int[]{
+						R.attr.cardBackgroundColor,
+						R.attr.cardNameBackgroundColor,
+						R.attr.cardTextColor,
+						R.attr.cardCountColor});
+		int bgColor = cardStyle.getColor(0, defaultBackgroundColor);
+		int textColor = cardStyle.getColor(2, defaultTextColor);
+		int nameBgColor = cardStyle.getColor(1, defaultTextBackgroundColor);
+		int countColor = cardStyle.getColor(3, textColor);
 
 		cardBox.setBackgroundColor(bgColor);
 		name.setTextColor(textColor);
@@ -208,6 +214,7 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 				cardDesc.setLayoutParams(params);
 			}
 		}
+		cardStyle.recycle();
 	}
 	
 	//TODO: Use this to update the VirtualKnights pile
