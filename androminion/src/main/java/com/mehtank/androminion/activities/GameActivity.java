@@ -287,6 +287,10 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         startService(createExplicitFromImplicitIntent(this, new Intent("com.mehtank.androminion.SERVER")));
     }
 
+    void stopServer() {
+        stopService(createExplicitFromImplicitIntent(this, new Intent("com.mehtank.androminion.SERVER")));
+    }
+
     /***
      * Android L (lollipop, API 21) introduced a new problem when trying to invoke implicit intent,
      * "java.lang.IllegalArgumentException: Service Intent must be explicit"
@@ -322,10 +326,6 @@ public class GameActivity extends SherlockActivity implements EventHandler {
         explicitIntent.setComponent(component);
 
         return explicitIntent;
-    }
-
-    void stopServer() {
-        stopService(new Intent("com.mehtank.androminion.SERVER"));
     }
 
     public void quickstart() {
