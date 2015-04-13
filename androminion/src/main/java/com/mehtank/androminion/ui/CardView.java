@@ -52,6 +52,7 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 	private int defaultBackgroundColor;
 	private int defaultTextColor;
 	private int defaultTextBackgroundColor;
+	private int defaultCountBackgroundColor;
 
 	/**
  * Information about a card type opened, onTable, indicator, order
@@ -127,6 +128,7 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 		defaultBackgroundColor = context.getResources().getColor(R.color.cardDefaultBackgroundColor);
 		defaultTextColor = context.getResources().getColor(R.color.cardDefaultTextColor);
 		defaultTextBackgroundColor = context.getResources().getColor(R.color.cardDefaultTextBackgroundColor);
+		defaultCountBackgroundColor = context.getResources().getColor(R.color.cardDefaultCountBackgroundColor);
 
 		state = new CardState(null);
 
@@ -190,8 +192,8 @@ public class CardView extends FrameLayout implements OnLongClickListener, Checka
 						R.attr.cardTextColor,
 						R.attr.cardCountColor});
 		int bgColor = cardStyle.getColor(0, defaultBackgroundColor);
-		int textColor = cardStyle.getColor(2, defaultTextColor);
 		int nameBgColor = cardStyle.getColor(1, defaultTextBackgroundColor);
+		int textColor = cardStyle.getColor(2, defaultTextColor);
 		int countColor = cardStyle.getColor(3, textColor);
 
 		cardBox.setBackgroundColor(bgColor);

@@ -4,6 +4,7 @@
     <color name="cardDefaultTextColor">#FFF</color>
     <color name="cardDefaultBackgroundColor">#000</color>
     <color name="cardDefaultTextBackgroundColor">#0000</color>
+    <color name="cardDefaultCountBackgroundColor">#FFF</color>
     <color name="cardInverseTextColor">#000</color>
     <color name="cardAttack">#FF8060</color>
     <color name="cardReaction">#0070CC</color>

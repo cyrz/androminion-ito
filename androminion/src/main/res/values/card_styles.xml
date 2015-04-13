@@ -73,6 +73,7 @@
 
     <style name="CardView.Treasure.Reaction" parent="@style/CardView.InverseText">
         <item name="cardNameBackgroundColor">@color/cardReaction</item>
+        <item name="cardTextColor">@color/cardDefaultTextColor</item>
     </style>
 
     <style name="CardView.Treasure.Victory" parent="@style/CardView.InverseText">
