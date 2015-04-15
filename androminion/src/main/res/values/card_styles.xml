@@ -87,6 +87,7 @@
 
     <style name="CardView.Victory.Action" parent="@style/CardView.InverseText">
         <item name="cardNameBackgroundColor">@color/cardVictory</item>
+        <item name="cardTextColor">@color/cardReaction</item>
         <item name="cardCountColor">@color/cardDefaultTextColor</item>
         <item name="cardBackgroundColor">@color/cardDefaultTextBackgroundColor</item>
     </style>
