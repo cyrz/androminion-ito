@@ -1042,17 +1042,18 @@ public class VDomPlayerPatrick extends BasePlayer {
 			ret.add(card);
 		}
 		
-		while (ret.size() < 2) {
-			if (getMyAddActions() == 0) {
-				for (Card acard : temphand) {
-					if (acard instanceof ActionCard) {
-						ret.add(acard);
+		if (ret.size() < 2 && getMyAddActions() == 0) {
+			for (Card acard : temphand) {
+				if (acard instanceof ActionCard) {
+					ret.add(acard);
+					if (ret.size() == 2) {
+						break;
 					}
 				}
 			}
 		}
 		
-		while (ret.size() < 2) {
+		if (ret.size() < 2) {
 			for (Card vCard : temphand) {
 				if (vCard instanceof VictoryCard) {
 					ret.add(vCard);
